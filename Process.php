@@ -38,7 +38,6 @@ foreach ($markdownFiles as $file) {
 }
 
 
-
 // Process each group and create a merged file for each day
 foreach ($groupedFiles as $creationDate => $files) {
     // Sort files within each group by creation time (earliest to latest)
@@ -55,28 +54,28 @@ foreach ($groupedFiles as $creationDate => $files) {
     $mergedContent = '';
     $filename = ''; // Initialize outside the loop
 
-	// Iterate through each markdown file in the group (in reverse order)
-	foreach (array_reverse($files) as $file) {
-	    // Get creation time in military format (hour:minute)
-	    $cmd = 'mdls -raw -name kMDItemFSCreationDate ' . escapeshellarg($file);
-	    $creationTime = strtotime(trim(shell_exec($cmd))); // Store the timestamp directly
+    // Iterate through each markdown file in the group (in reverse order)
+    foreach (array_reverse($files) as $file) {
+        // Get creation time in military format (hour:minute)
+        $cmd = 'mdls -raw -name kMDItemFSCreationDate ' . escapeshellarg($file);
+        $creationTime = strtotime(trim(shell_exec($cmd))); // Store the timestamp directly
 
-	    // Append creation time (as h1) and content to the merged content
-	    $mergedContent .= "# " . date('H:i', $creationTime) . "\n";
-	    $mergedContent .= file_get_contents($file) . "";
+        // Append creation time (as h1) and content to the merged content
+        $mergedContent .= "# " . date('H:i', $creationTime) . "\n";
+        $mergedContent .= file_get_contents($file) . "\n"; // Add a newline
 
-	    $filename = basename($file); // Update the filename
-	}
+        $filename = basename($file); // Update the filename
+    }
 
-	// Generate output file path for the current group using the configured date format
-	$formattedCreationDate = date('Y_m_d', $creationTime); // Use $creationTime directly
+    // Generate output file path for the current group using the configured date format
+    $formattedCreationDate = date('Y_m_d', $creationTime); // Use $creationTime directly
 
     if ($formattedCreationDate === false) {
         echo "Error converting date: $creationDate\n";
         continue;
     }
 
-    $outputFile = $formattedCreationDate . '.md';
+    $outputFile = $formattedCreationDate . '_with_times.md';
     $outputFullFilePath = $OutputPath . $outputFile;
 
     // Write the merged content to the output file
@@ -84,4 +83,3 @@ foreach ($groupedFiles as $creationDate => $files) {
 
     echo "$filename ($creationDate) ->\n$outputFile\n------\n";
 }
-
