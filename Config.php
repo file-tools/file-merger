@@ -11,8 +11,8 @@ Ideas could add:
 date_default_timezone_set('America/New_York');
 
 // Define input and output paths
-$InputPath = '/Users/Me/Library/Mobile Documents/iCloud~co~fluder~fsnotes/Documents/_ToJournal';
-$OutputPath = '/Users/Me/Desktop/Out/';
+$InputPath = '/Users/Reess/Library/Mobile Documents/iCloud~co~fluder~fsnotes/Documents/Obsidian';
+$OutputPath = '/Users/Reess/Desktop/OutFS';
 
 // Date formate for output files 
 $DateFormat = 'Y_m_d';
