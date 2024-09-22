@@ -1,5 +1,4 @@
 <?php
-<?php
 
 require_once("Config.php");
 
@@ -7,7 +6,7 @@ require_once("Config.php");
 function normalizeFilePath($path)
 {
     // Remove trailing and leading whitespace and quotes
-    $path = trim($path, " \t\n\r\0\x0B\"'");
+    $path = trim($path, " \t\n\r\0\x0B\"\'");
 
     // Replace backslashes followed by a space with just a space
     $path = preg_replace('/\\\\ +/', ' ', $path);
@@ -23,36 +22,14 @@ function normalizeFilePath($path)
 
 $InputPath = normalizeFilePath($InputPath);
 
-// Check if the input path is valid
-if ($InputPath === false) {
-    die("Error: Invalid input path.");
-}
-
 // Get all markdown files in the input directory
 $markdownFiles = glob($InputPath . '/*.md');
-
-// Check if files were found
-if (empty($markdownFiles)) {
-    die("No markdown files found in the input directory.");
-}
 
 // Group files by creation date
 $groupedFiles = [];
 foreach ($markdownFiles as $file) {
     $cmd = 'mdls -raw -name kMDItemFSCreationDate ' . escapeshellarg($file);
-
-    $output = trim(shell_exec($cmd));
-    if ($output === false || empty($output)) {
-        echo "Error executing command for file: $file\n";
-        continue;
-    }
-
-    $creationDateTime = strtotime($output);
-    if ($creationDateTime === false) {
-        echo "Error parsing date for file: $file\n";
-        continue;
-    }
-
+    $creationDateTime = strtotime(trim(shell_exec($cmd)));
     $creationDate = date('Y_m_d', $creationDateTime);
     $groupedFiles[$creationDate][] = $file;
 }
@@ -63,13 +40,8 @@ foreach ($groupedFiles as $creationDate => $files) {
     usort($files, function ($a, $b) {
         $cmdA = 'mdls -raw -name kMDItemFSCreationDate ' . escapeshellarg($a);
         $cmdB = 'mdls -raw -name kMDItemFSCreationDate ' . escapeshellarg($b);
-
         $creationTimeA = strtotime(trim(shell_exec($cmdA)));
         $creationTimeB = strtotime(trim(shell_exec($cmdB)));
-
-        if ($creationTimeA === false || $creationTimeB === false) {
-            return 0;
-        }
 
         return $creationTimeA <=> $creationTimeB;
     });
@@ -83,27 +55,15 @@ foreach ($groupedFiles as $creationDate => $files) {
         // Get creation time in military format (hour:minute)
         $cmd = 'mdls -raw -name kMDItemFSCreationDate ' . escapeshellarg($file);
         $creationTime = strtotime(trim(shell_exec($cmd)));
-        
-        if ($creationTime === false) {
-            echo "Error getting creation time for file: $file\n";
-            continue;
-        }
+        $creationHour = date('H_i', $creationTime);
 
-        $timeFormatted = date('H:i', $creationTime);
-        $content = file_get_contents($file);
+        // Add filename as the merged file name
+        $filename = $creationDate . '-' . $creationHour . '.md';
 
-        if ($content === false) {
-            echo "Error reading content of file: $file\n";
-            continue;
-        }
-
-        // Add content to the merged file with the timestamp
-        $mergedContent .= "\n\n" . $timeFormatted . ":\n\n" . $content;
+        // Add content to merged file
+        $mergedContent .= file_get_contents($file) . "\n\n";
     }
 
-    // Define a filename for the merged content
-    $filename = $creationDate . '_merged.md';
-    file_put_contents($filename, $mergedContent);
+    // Write the merged content to a new file
+    file_put_contents($InputPath . '/' . $filename, $mergedContent);
 }
-
-echo "Processing complete. Merged files created.\n";
