@@ -1,0 +1,13 @@
+# Configuration files
+config.ini
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp 

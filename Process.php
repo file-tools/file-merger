@@ -1,6 +1,19 @@
 <?php
 
-require_once("Config.php");
+// Load configuration from INI file
+$config = parse_ini_file("config.ini");
+
+if ($config === false) {
+    die("Error: config.ini file not found or invalid. Please copy config-sample.ini to config.ini and configure your settings.\n");
+}
+
+// Set the timezone
+date_default_timezone_set($config['timezone']);
+
+// Define configuration variables
+$InputPath = $config['input_path'];
+$OutputPath = $config['output_path'];
+$DateFormat = $config['date_format'];
 
 
 // Function to sanitize and normalize a file path
