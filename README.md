@@ -1,14 +1,39 @@
 # File Merger - FS Notes to Obsidian Daily Journal Converter
 
-A PHP tool designed to transform scattered, on-the-fly markdown notes from **FS Notes** into organized daily summaries that are perfectly compatible with **Obsidian journal pages**.
+A PHP tool designed to transform scattered, on-the-fly text or markdown notes into organized daily summaries that are perfectly compatible with **Obsidian journal pages**.
 
-## The Problem This Solves
 
-When using FS Notes for quick capture of thoughts, ideas, and notes throughout the day, you often end up with:
-- Hundreds or thousands of small, undeveloped markdown files
-- Scattered thoughts that are hard to review and organize
-- Individual files that lack context when viewed in isolation
-- A cluttered notes directory that becomes unwieldy over time
+
+## Why
+
+When I'm out in the world and have a thought or idea, I like to just be able to log it quickly and not have to worry about whether I should put it in a certain folder. If I knew I had to make this additional decision, perhaps I wouldn't want to log my thought. 
+
+Many notes apps work for quick logging thoughts but Obsidian, in my view, is not one of them. This is unfortunate because I actually use Obsdian for everything else. 
+
+To solve for this limitation with Obsidian mobile app, I have landed on using FS Notes which is a native iOS app that writes notes to markdown files, just like Obsidian, which allows transfer between the two apps simple. 
+
+The remaining issue is that I am generally a believer in the popular Obsidian-compatable note format of keeping a day-based journal for quick notes, maybe stored in a "journals" folder and a "pages" folder for more durable, important standalone notes. 
+
+Within my journal notes, I always timestamp my thoughts like this: 
+
+```
+[16:24]
+Idea - Study different indigenous grass types for law improvements
+
+[13:24]
+Finished writing quarterly reports
+```
+
+These notes generally aren't that important but good to have stored and accessible via search in Obsidian. 
+
+This script allows me to take notes like these on FS Notes where they live as indpenedent files (e.g. an entire markdown files that just says "Finished writing quarterly reports") and then have this script merge that script into a file like "2025_05_05.md" along with other notes for that day with the proper header 
+
+In short: 
+- Obsidian is wonderful for storing and searching and formatting markdown notes and I want to keep this as my main infomation store. It not good, however, at quick capturing ideas on my phone, on the go. 
+- FS Notes (and others) are native, fast apps that write to markdown files and much better for quick capture
+- This script reformats my quick captures on FS Notes and prepared them for storage on Obsidian ... 
+
+
 
 ## The Solution
 
